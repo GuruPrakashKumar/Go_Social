@@ -48,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
         var response = await http.post(
             Uri.parse(registration),
-          headers: {"Content-Type":"application/json"},
+          headers: {"Content-Type":"application/json"}, //it is a request header that indicates request body is in json format
             body: jsonEncode(regBody)
         );
         if(response.statusCode == 200){
@@ -83,16 +83,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     decoration: InputDecoration(
                       hintText: 'Email',
                       focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide(color: Colors.deepOrange,width: 2)
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.blueAccent,width: 2)
                       ),
                       enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          borderSide: BorderSide(color: Colors.blueAccent,width: 2)
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.blueGrey,width: 2)
                       ),
 
                       prefixIcon: Icon(Icons.email,color:Colors.deepOrange),
-                      // border: OutlineInputBorder(borderRadius: BorderRadius.circular(15),borderSide: BorderSide(color: Colors.deepOrange))
                     ),
                   ),
                   Container(height: 11,),
@@ -103,12 +102,19 @@ class _MyHomePageState extends State<MyHomePage> {
                     obscuringCharacter: '*',
                     decoration: InputDecoration(
                         hintText: 'password',
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15),borderSide: BorderSide(color: Colors.deepOrange))
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.blueAccent,width: 2)
+                        ),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.blueGrey,width: 2)
+                      ),
                     ),
                   ),
                   ElevatedButton(onPressed: (){
-                    String uEmail = emailText.text.toString();
-                    String uPass = passText.text;//toString is redundant
+                    String uEmail = emailText.text;
+                    String uPass = passText.text;
                     registerUser();
                     print("Email: $uEmail, Pass: $uPass");
                   }, child: Text('Sign up'))
