@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:user_authentication_flutter/Signin_page.dart';
 import 'config.dart';
 void main() {
   runApp(const MyApp());
@@ -117,7 +118,16 @@ class _MyHomePageState extends State<MyHomePage> {
                     String uPass = passText.text;
                     registerUser();
                     print("Email: $uEmail, Pass: $uPass");
-                  }, child: Text('Sign up'))
+                  }, child: Text('Sign up')),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                        child: Text("Already have an account? Login",style:TextStyle(color: Colors.blue),),
+                      onTap: (){
+                          Navigator.push(context,MaterialPageRoute(builder: (context)=> Signin_page()));
+                      },
+                    ),
+                  ),
                 ],
               ))
       ),
