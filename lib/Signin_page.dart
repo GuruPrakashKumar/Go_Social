@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:user_authentication_flutter/Home_page.dart';
+import 'package:user_authentication_flutter/uploadProfileImage.dart';
 import 'config.dart';
 
 class Signin_page extends StatefulWidget{
@@ -38,7 +39,7 @@ class _SignInPageState extends State<Signin_page>{
           print("login successful");
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Home_page()),
+            MaterialPageRoute(builder: (context) => UploadProfileImage()),
           );
         }
       } else {
