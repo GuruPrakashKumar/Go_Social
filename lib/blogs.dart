@@ -52,7 +52,7 @@ class BlogPageState extends State<BlogsPage>{
       }
       setState(() {}); // Update the UI
     } catch (e) {
-      // Handle error
+      print(e);
     }
   }
 
