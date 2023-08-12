@@ -1,22 +1,27 @@
 // import 'package:flutter/cupertino.dart';
 import 'dart:convert';
-
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:user_authentication_flutter/Home_page.dart';
+
 import 'package:user_authentication_flutter/uploadProfileImage.dart';
 import 'config.dart';
 
 class Signin_page extends StatefulWidget{
+  const Signin_page({super.key});
+
   @override
-  _SignInPageState createState() => _SignInPageState();
+  State<Signin_page> createState() => _SignInPageState();
 
 }
 
 class _SignInPageState extends State<Signin_page>{
   var loginEmailText = TextEditingController();
   var loginPassText = TextEditingController();
+  // final storage = new FlutterSecureStorage();
+  final storage = const FlutterSecureStorage(); //this const improves performance
 
   void loginUser() async{
     if(loginEmailText.text.isNotEmpty && loginPassText.text.isNotEmpty){
@@ -37,10 +42,15 @@ class _SignInPageState extends State<Signin_page>{
           print("login failed: Invalid credentials");
         } else {
           print("login successful");
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => UploadProfileImage()),
-          );
+          print(responseData["auth"]);
+          await storage.write(key: "token", value: responseData["auth"]);
+
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => UploadProfileImage()),
+          // );
+
+          Get.to(()=>const UploadProfileImage());//used Get.to() to navigate to next page instead of Navigator.push() for increasing performance
         }
       } else {
         print("login failed: Server error");

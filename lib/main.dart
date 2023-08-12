@@ -40,11 +40,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   var emailText = TextEditingController();
   var passText = TextEditingController();
+  var nameText = TextEditingController();
   bool _isNotValidate = false;
 
   void registerUser() async{
-    if(emailText.text.isNotEmpty && passText.text.isNotEmpty){
+    if(emailText.text.isNotEmpty && passText.text.isNotEmpty && nameText.text.isNotEmpty){
         var regBody = {
+          "name":nameText.text,
           "email":emailText.text,
           "password":passText.text
         };
@@ -79,6 +81,24 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  TextField(//name text field
+
+                    controller: nameText,
+                    // enabled: false,
+                    decoration: InputDecoration(
+                      hintText: 'Name',
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.blueAccent,width: 2)
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: Colors.blueGrey,width: 2)
+                      ),
+
+                    ),
+                  ),
+                  Container(height: 11,),
                   TextField(
 
                     controller: emailText,
@@ -126,7 +146,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: InkWell(
                         child: Text("Already have an account? Login",style:TextStyle(color: Colors.blue),),
                       onTap: (){
-                          Navigator.push(context,MaterialPageRoute(builder: (context)=> Signin_page()));
+                          // Navigator.push(context,MaterialPageRoute(builder: (context)=> const Signin_page()));
+                          Get.to(()=>const Signin_page());
                       },
                     ),
                   ),

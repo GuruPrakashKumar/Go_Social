@@ -4,5 +4,7 @@
 final url = 'https://service-for-user-authentication-flutter.onrender.com/';
 final registration = url + "signup";
 final imgUploadUrl = url + "imgupload";
+final uploadBlog = url+"blogs";
+final getAllBlogsUrl = url+"getAllBlogs";
 
 final loginUrl = url+"signin";
