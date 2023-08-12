@@ -53,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
         var response = await http.post(
             Uri.parse(registration),
-          headers: {"Content-Type":"application/json"}, //it is a request header that indicates request body is in json format
+          headers: {"Content-Type":"application/json"}, //note for me:it is a request header that indicates request body is in json format
             body: jsonEncode(regBody)
         );
         if(response.statusCode == 200){
