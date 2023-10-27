@@ -196,6 +196,7 @@ class BlogPageState extends State<BlogsPage> {
                 return SizedBox(
                   width: double.infinity,
                   child: Card(
+                    color: Colors.white,
                     elevation: 4,
                     child: IntrinsicHeight(
                       child: Column(

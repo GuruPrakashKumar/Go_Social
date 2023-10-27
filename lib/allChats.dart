@@ -116,6 +116,7 @@ class _AllChatsState extends State<AllChats> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade200,
       appBar: AppBar(
         title: const Text("Chats"),
         actions: [
@@ -243,7 +244,7 @@ class _AllChatsState extends State<AllChats> {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 5.0, vertical: 0.0),
                   child: Card(
-                    surfaceTintColor: Colors.grey,
+                    surfaceTintColor: Colors.white,
                     elevation: 1,
                     child: ListTile(
                       onTap: () async {

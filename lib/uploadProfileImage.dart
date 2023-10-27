@@ -167,8 +167,9 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade200,
       appBar: AppBar(
-        centerTitle: true,
+        // centerTitle: true,
         title: const Text('Profile'),
 
       ),
@@ -184,7 +185,7 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black, width: 1),
+                    border: Border.all(color: Colors.grey, width: 1),
                     borderRadius: const BorderRadius.all(
                       Radius.circular(100),
                     ),
@@ -227,7 +228,7 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
                     icon: const Icon(
                       Icons.add_a_photo_outlined,
                       color: Colors.black,
-                      size: 30,
+                      size: 28,
                     ),
                   ),
                 )
@@ -259,7 +260,7 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
                 elevation: 2,
                 shape:
                     RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                color: Colors.grey[50],
+                color: const Color(0xFFFFFFFF),
                 child: const Column(
                   children: [
                     Padding(

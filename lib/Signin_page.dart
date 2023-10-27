@@ -244,6 +244,7 @@ class _SignInPageState extends State<Signin_page> {
                                   isLoading = false;
                                 });
                               } else {
+                                FocusScope.of(context).unfocus();
                                 loginUser();
                               }
                             },

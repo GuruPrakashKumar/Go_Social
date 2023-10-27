@@ -33,23 +33,23 @@ class _NavigationPageState extends State<NavigationPage> with SingleTickerProvid
         ],
       ),
       bottomNavigationBar: Container(
-        color: Colors.white,
+        color: Colors.grey.shade100,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15),
           child: GNav(
             rippleColor: const Color(0xFFF5F5F5), // tab button ripple color when pressed
             hoverColor: const Color(0xFFF5F5F5), // tab button hover color
             haptic: true, // haptic feedback
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.grey.shade100,
             color: Colors.black,
             activeColor: Colors.black,
             padding: const EdgeInsets.all(14),
             tabBorderRadius: 100,
-            tabBorder: const Border(
-              top: BorderSide(width: 2.0, color: Colors.white),
-              bottom: BorderSide(width: 2.0, color: Colors.white),
-              left: BorderSide(width: 2.0, color: Colors.white),
-              right: BorderSide(width: 2.0, color: Colors.white),
+            tabBorder: Border(
+              top: BorderSide(width: 2.0, color: Colors.grey.shade100),
+              bottom: BorderSide(width: 2.0, color: Colors.grey.shade100),
+              left: BorderSide(width: 2.0, color: Colors.grey.shade100),
+              right: BorderSide(width: 2.0, color: Colors.grey.shade100),
 
             ),
             tabActiveBorder: const Border(
