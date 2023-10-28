@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:user_authentication_flutter/individualChatPage.dart';
 import 'package:http/http.dart' as http;
@@ -53,7 +55,7 @@ class _AllChatsState extends State<AllChats> {
         isLoading = false;
       });
     } else {
-      print("error");
+      //print("error");
       setState(() {
         isLoading = false;
       });
@@ -63,7 +65,7 @@ class _AllChatsState extends State<AllChats> {
   fetchTargetEmails() async {
     final storage = const FlutterSecureStorage();
     final token = await storage.read(key: "token");
-    print("token from chat section is $token");
+    //print("token from chat section is $token");
     final response = await http.get(
       Uri.parse(fetchTargetEmailsUrl),
       headers: {
@@ -78,9 +80,13 @@ class _AllChatsState extends State<AllChats> {
           jsonResponse.map((item) => item["targetEmail"]).toList();
       List<dynamic> extractedCurrMsgs = jsonResponse.map((item) {
         if (item["lastMessage"]["type"] == 'sentMsg') {
-          return item['lastMessage']['text'].length > 26 ? 'You: ${(item["lastMessage"]["text"]).substring(0,27)}...' : 'You: ${item["lastMessage"]["text"]}';
+          return item['lastMessage']['text'].length > 26
+              ? 'You: ${(item["lastMessage"]["text"]).substring(0, 27)}...'
+              : 'You: ${item["lastMessage"]["text"]}';
         } else {
-          return item["lastMessage"]["text"].length > 26 ? '${(item["lastMessage"]["text"]).substring(0,27)}...' : item["lastMessage"]["text"];
+          return item["lastMessage"]["text"].length > 26
+              ? '${(item["lastMessage"]["text"]).substring(0, 27)}...'
+              : item["lastMessage"]["text"];
         }
       }).toList();
       setState(() {
@@ -102,6 +108,7 @@ class _AllChatsState extends State<AllChats> {
       fetchBasicDetails(arrTargetEmailIds);
     });
   }
+
   Future<void> refreshData() async {
     setState(() {
       isLoading = true;
@@ -111,6 +118,20 @@ class _AllChatsState extends State<AllChats> {
     });
     // Called setState to rebuild the widget with the updated data
     setState(() {});
+  }
+
+  Future<void> _handleRefresh() async {
+    Timer(Duration(milliseconds: 3200), () {
+      setState(() {
+        isLoading = true;
+      });
+      fetchTargetEmails().then((_) {
+        fetchBasicDetails(arrTargetEmailIds);
+      });
+      // Called setState to rebuild the widget with the updated data
+      setState(() {});
+    });
+    return await Future.delayed(Duration(seconds: 2));
   }
 
   @override
@@ -139,7 +160,7 @@ class _AllChatsState extends State<AllChats> {
                       builder: (context) => const NewMessagePage(),
                     ),
                   );
-                  if(atLeastOneMsgSent){
+                  if (atLeastOneMsgSent) {
                     refreshData();
                   }
                 },
@@ -198,7 +219,9 @@ class _AllChatsState extends State<AllChats> {
                                     color: Colors.grey.withOpacity(0.9)),
                               ),
                             ),
-                            const SizedBox(width: 10,),
+                            const SizedBox(
+                              width: 10,
+                            ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -227,7 +250,6 @@ class _AllChatsState extends State<AllChats> {
                                         color: Colors.grey.withOpacity(0.9)),
                                   ),
                                 )
-
                               ],
                             )
                           ],
@@ -237,62 +259,71 @@ class _AllChatsState extends State<AllChats> {
                   ),
                 );
               })
-          : ListView.builder(
-              itemCount: arrNames.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 5.0, vertical: 0.0),
-                  child: Card(
-                    surfaceTintColor: Colors.white,
-                    elevation: 1,
-                    child: ListTile(
-                      onTap: () async {
-                        final targetEmailId = arrTargetEmailIds[index]['email'];
-                        bool atLeastOneMsgSent = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => IndividualChatPage(
-                              name: arrNames[index],
-                              icon: arrIcons[index],
-                              targetEmailId: targetEmailId,
-                              userEmailId: widget.userEmailId,
-                              newMsg: false, //for skeleton ui
+          : LiquidPullToRefresh(
+              onRefresh: _handleRefresh,
+              color: Colors.white,
+              height: 200,
+              backgroundColor: Colors.deepPurple[200],
+              animSpeedFactor: 2.0,
+              showChildOpacityTransition: false,
+              child: ListView.builder(
+                itemCount: arrNames.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 5.0, vertical: 0.0),
+                    child: Card(
+                      surfaceTintColor: Colors.white,
+                      elevation: 1,
+                      child: ListTile(
+                        onTap: () async {
+                          final targetEmailId =
+                              arrTargetEmailIds[index]['email'];
+                          bool atLeastOneMsgSent = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => IndividualChatPage(
+                                name: arrNames[index],
+                                icon: arrIcons[index],
+                                targetEmailId: targetEmailId,
+                                userEmailId: widget.userEmailId,
+                                newMsg: false, //for skeleton ui
+                              ),
                             ),
-                          ),
-                        );
-                        if(atLeastOneMsgSent){
-                          refreshData();
-                        }
-                      },
-                      leading: CircleAvatar(
-                        radius: 30.0,
-                        backgroundImage: NetworkImage(arrIcons[index]),
-                      ),
-                      title: Text(
-                        arrNames[index],
-                        style: const TextStyle(
-                          color: Color(0xFF161616),
-                          fontSize: 18,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w600,
-                          // height: 0.08,
+                          );
+                          if (atLeastOneMsgSent) {
+                            refreshData();
+                          }
+                        },
+                        leading: CircleAvatar(
+                          radius: 30.0,
+                          backgroundImage: NetworkImage(arrIcons[index]),
                         ),
-                      ),
-                      subtitle: Text(
-                        arrCurrMsgs[index],
-                        style: const TextStyle(
-                          color: Color(0xFF5B5B5B),
-                          fontSize: 15,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w400,
-                          // height: 0.12,
+                        title: Text(
+                          arrNames[index],
+                          style: const TextStyle(
+                            color: Color(0xFF161616),
+                            fontSize: 18,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w600,
+                            // height: 0.08,
+                          ),
+                        ),
+                        subtitle: Text(
+                          arrCurrMsgs[index],
+                          style: const TextStyle(
+                            color: Color(0xFF5B5B5B),
+                            fontSize: 15,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w400,
+                            // height: 0.12,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
       // floatingActionButton: FloatingActionButton(
       //   onPressed: () {

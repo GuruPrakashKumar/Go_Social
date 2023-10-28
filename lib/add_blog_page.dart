@@ -108,7 +108,7 @@ class _AddBlogState extends State<AddBlog> {
           Uri.parse(uploadBlogUrl),
         );
         request.headers['Authorization'] = 'Bearer $token';
-        print('-----Bearer $token');
+        //print('-----Bearer $token');
         request.fields['blog'] = blogText.text.trim();
 
         if (selectedImage != null) {
@@ -124,12 +124,12 @@ class _AddBlogState extends State<AddBlog> {
         // var responseData = jsonDecode(response.body);
         // print('responseData------------------$responseData');
         if (response.statusCode == 200) {
-          print("blog uploaded");
+          //print("blog uploaded");
           // Navigator.pushReplacement(context,
           //     MaterialPageRoute(builder: (context) => const BlogsPage()));
           Navigator.pop(context, "New Blog Added");
         } else if (response.statusCode == 500) {
-          print("blog upload failed");
+          //print("blog upload failed");
           setState(() {
             errorTextVal = 'Internal Server Error';
           });

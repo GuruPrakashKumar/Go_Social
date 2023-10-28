@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:user_authentication_flutter/blogs_page.dart';
 
+import 'Home_page.dart';
 import 'config.dart';
 
 class UploadProfileImage extends StatefulWidget {
@@ -60,7 +61,7 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
 
   uploadImage(File image) async {
     try {
-      final storage = FlutterSecureStorage();
+      final storage = const FlutterSecureStorage();
       final token = await storage.read(key: "token");
       var request = http.MultipartRequest(
         'POST',
@@ -258,12 +259,12 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
               child: Card(
                 margin: const EdgeInsets.only(top: 10, right: 15, left: 15),
                 elevation: 2,
+                surfaceTintColor: Colors.white,
                 shape:
                     RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                color: const Color(0xFFFFFFFF),
-                child: const Column(
+                child: Column(
                   children: [
-                    Padding(
+                    const Padding(
                         padding: EdgeInsets.only(top: 10,bottom: 10, right: 10, left: 10),
                             child: ListTile(
                                leading: Icon(Icons.settings),
@@ -279,8 +280,8 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
                                   trailing: Icon(Icons.arrow_forward_ios_rounded),
                           ),
                         ),
-                    Divider(height: 2,),
-                    Padding(
+                    const Divider(height: 2,),
+                    const Padding(
                         padding: EdgeInsets.only(top: 10,bottom: 10, right: 10, left: 10),
                             child: ListTile(
                                leading: Icon(Icons.privacy_tip_outlined),
@@ -296,8 +297,8 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
                                   trailing: Icon(Icons.arrow_forward_ios_rounded),
                           ),
                         ),
-                    Divider(height: 2,),
-                    Padding(
+                    const Divider(height: 2,),
+                    const Padding(
                         padding: EdgeInsets.only(top: 10,bottom: 10, right: 10, left: 10),
                             child: ListTile(
                                leading: Icon(Icons.report_problem_outlined),
@@ -313,8 +314,8 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
                                   trailing: Icon(Icons.arrow_forward_ios_rounded),
                           ),
                         ),
-                    Divider(height: 2,),
-                    Padding(
+                    const Divider(height: 2,),
+                    const Padding(
                         padding: EdgeInsets.only(top: 10,bottom: 10, right: 10, left: 10),
                             child: ListTile(
                                leading: Icon(Icons.help_outline),
@@ -330,23 +331,58 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
                                   trailing: Icon(Icons.arrow_forward_ios_rounded),
                           ),
                         ),
-                    Divider(height: 2,),
-                    Padding(
-                        padding: EdgeInsets.only(top: 10,bottom: 10, right: 10, left: 10),
-                            child: ListTile(
-                               leading: Icon(Icons.logout_rounded),
-                                title: Text(
-                                  "Log Out",
-                                style: TextStyle(
-                                  color: Color(0xFF5B5B5B),
-                                  fontSize: 20,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w500,
+                    const Divider(height: 2,),
+                    InkWell(
+                      onTap: (){
+                        showDialog(context: context, builder: (context){
+                          return AlertDialog(
+                            title: const Text("Log Out?", style: TextStyle(
+                                fontFamily: 'Poppins'
+                            ),),
+                            content: const Text('Are you sure you want to log out?', style: TextStyle(fontFamily: 'Poppins', fontSize: 16),),
+                            actions: [
+                              TextButton(
+                                onPressed: () async {
+                                  // Allow the back button press
+                                  const storage = FlutterSecureStorage();
+                                  storage.write(key: "loggedIn", value: '');
+                                  // Navigate to HomePage and remove all previous routes
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const HomePage()),
+                                        (route) => false, // This predicate removes all routes
+                                  );
+                                },
+                                child: const Text('Yes',style: TextStyle(fontFamily: 'Poppins', fontSize: 16),),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  // Dismiss the alert dialog
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('No',style: TextStyle(fontFamily: 'Poppins', fontSize: 16),),
+                              ),
+                            ],
+                          );
+                        });
+                      },
+                      child: Padding(
+                          padding: const EdgeInsets.only(top: 10,bottom: 10, right: 10, left: 10),
+                              child: const ListTile(
+                                 leading: Icon(Icons.logout_rounded),
+                                  title: Text(
+                                    "Log Out",
+                                  style: TextStyle(
+                                    color: Color(0xFF5B5B5B),
+                                    fontSize: 20,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w500,
+                                    ),
                                   ),
-                                ),
-                                  trailing: Icon(Icons.arrow_forward_ios_rounded),
+                                    trailing: Icon(Icons.arrow_forward_ios_rounded),
+                            ),
                           ),
-                        ),
+                    ),
                   ],
                 ),
           ))

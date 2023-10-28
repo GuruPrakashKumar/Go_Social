@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -5,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:like_button/like_button.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:user_authentication_flutter/view_image_page.dart';
@@ -23,7 +25,7 @@ class BlogsPage extends StatefulWidget {
 
 class BlogPageState extends State<BlogsPage> {
   Future<List<Map<String, dynamic>>> getAllBlogs() async {
-    final storage = const FlutterSecureStorage();
+    const storage = FlutterSecureStorage();
     final token = await storage.read(key: "token");
     var response = await http.get(
       Uri.parse(getAllBlogsUrl),
@@ -42,10 +44,20 @@ class BlogPageState extends State<BlogsPage> {
     }
   }
 
+  Future<void> _handleRefresh() async {
+    Timer(Duration(milliseconds: 3200), () {
+      setState(() {
+        getAllBlogs();
+      });
+    });
+    return await Future.delayed(Duration(seconds: 2));
+  }
+
   @override
   Widget build(BuildContext context) {
     var allBlogs = [];
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         title: const Text("Blogs"),
         actions: [
@@ -64,7 +76,7 @@ class BlogPageState extends State<BlogsPage> {
                 onTap: () async {
                   final result = await Navigator.push(context,
                       MaterialPageRoute(builder: (context) => const AddBlog()));
-                  if(result!=null){
+                  if (result != null) {
                     setState(() {
                       getAllBlogs();
                     });
@@ -104,7 +116,8 @@ class BlogPageState extends State<BlogsPage> {
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: getAllBlogs(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {//Shimmer effect will be shown while loading the blogs
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            //Shimmer effect will be shown while loading the blogs
             return ListView.builder(
                 itemCount: 3,
                 itemBuilder: (context, index) {
@@ -120,7 +133,8 @@ class BlogPageState extends State<BlogsPage> {
                                 highlightColor: Colors.white,
                                 period: const Duration(seconds: 1),
                                 child: Container(
-                                  margin: const EdgeInsets.only(left: 15, top: 10),
+                                  margin:
+                                      const EdgeInsets.only(left: 15, top: 10),
                                   height: 40,
                                   width: 40,
                                   decoration: BoxDecoration(
@@ -133,39 +147,49 @@ class BlogPageState extends State<BlogsPage> {
                                 highlightColor: Colors.white,
                                 period: const Duration(seconds: 1),
                                 child: Container(
-                                  margin: const EdgeInsets.only(left: 15, top: 10),
+                                  margin:
+                                      const EdgeInsets.only(left: 15, top: 10),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Container(
                                         height: 12,
                                         width: 200,
                                         decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(30),
-                                            color: Colors.grey.withOpacity(0.9)),
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            color:
+                                                Colors.grey.withOpacity(0.9)),
                                       ),
-                                      const SizedBox(height: 10,),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
                                       Container(
                                         height: 12,
                                         width: 100,
                                         decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(30),
-                                            color: Colors.grey.withOpacity(0.9)),
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            color:
+                                                Colors.grey.withOpacity(0.9)),
                                       )
                                     ],
                                   ),
                                 ),
                               ),
-
                             ],
                           ),
-                          const SizedBox(height: 20,),
+                          const SizedBox(
+                            height: 20,
+                          ),
                           Shimmer.fromColors(
                             baseColor: Colors.grey.withOpacity(0.4),
                             highlightColor: Colors.white,
                             period: const Duration(seconds: 1),
                             child: Container(
-                              margin: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
+                              margin: const EdgeInsets.only(
+                                  left: 10, right: 10, bottom: 20),
                               height: 200,
                               width: double.infinity,
                               decoration: BoxDecoration(
@@ -189,102 +213,110 @@ class BlogPageState extends State<BlogsPage> {
           } else {
             allBlogs = snapshot.data!;
             // print(allBlogs);
-            return ListView.builder(
-              itemCount: allBlogs.length,
-              itemBuilder: (context, index) {
-                final blog = allBlogs[index];
-                return SizedBox(
-                  width: double.infinity,
-                  child: Card(
-                    color: Colors.white,
-                    elevation: 4,
-                    child: IntrinsicHeight(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                    blog['imgPath'],
+            return LiquidPullToRefresh(
+              onRefresh: _handleRefresh,
+              color: Colors.white,
+              height: 200,
+              backgroundColor: Colors.deepPurple[200],
+              animSpeedFactor: 2.0,
+              showChildOpacityTransition: false,
+              child: ListView.builder(
+                itemCount: allBlogs.length,
+                itemBuilder: (context, index) {
+                  final blog = allBlogs[index];
+                  return SizedBox(
+                    width: double.infinity,
+                    child: Card(
+                      margin: const EdgeInsets.only(left: 8, right: 8, top: 10),
+                      // surfaceTintColor: Colors.white,//TODO: decide this colour
+                      elevation: 2,
+                      child: IntrinsicHeight(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                      blog['imgPath'],
+                                    ),
+                                    radius: 20,
                                   ),
-                                  radius: 20,
-                                ),
-                                const SizedBox(width: 10),
-                                Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        blog['name'],
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18,
+                                  const SizedBox(width: 10),
+                                  Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          blog['name'],
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18,
+                                              fontFamily: 'Poppins'),
                                         ),
-                                      ),
-                                      Text(
-                                        blog['datePublished'],
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                        ),
-                                      )
-                                    ]),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Text(
-                              blog['blog'],
-                              style: const TextStyle(
-                                fontSize: 18,
+                                        Text(
+                                          blog['datePublished'],
+                                          style: const TextStyle(
+                                              fontSize: 14,
+                                              fontFamily: 'Poppins'),
+                                        )
+                                      ]),
+                                ],
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: blog['blogImagePath'] != "null"
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    child: InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ViewImagePage(
-                                                      selectedImageUrl:
-                                                          blog['blogImagePath'],
-                                                    )));
-                                      },
-                                      child: Hero(
-                                        tag: blog['blogImagePath'],
-                                        child: Image.network(
-                                          blog['blogImagePath'],
-                                          width: double.infinity,
-                                          fit: BoxFit.contain,
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Text(
+                                blog['blog'],
+                                style: const TextStyle(
+                                    fontSize: 18, fontFamily: 'Poppins'),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: blog['blogImagePath'] != "null"
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ViewImagePage(
+                                                        selectedImageUrl: blog[
+                                                            'blogImagePath'],
+                                                      )));
+                                        },
+                                        child: Hero(
+                                          tag: blog['blogImagePath'],
+                                          child: Image.network(
+                                            blog['blogImagePath'],
+                                            width: double.infinity,
+                                            fit: BoxFit.contain,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  )
-                                : const SizedBox.shrink(),
-                          ),
-                          LikeDislikeButtons(
-                            blogId: blog['_id'],
-                            likes: blog['likes'],
-                            dislikes: blog['dislikes'],
-                            isLiked: blog['isLiked'],
-                            isDisliked: blog['isDisliked'],
-                          ),
-                        ],
+                                    )
+                                  : const SizedBox.shrink(),
+                            ),
+                            LikeDislikeButtons(
+                              blogId: blog['_id'],
+                              likes: blog['likes'],
+                              dislikes: blog['dislikes'],
+                              isLiked: blog['isLiked'],
+                              isDisliked: blog['isDisliked'],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             );
           }
         },
@@ -401,7 +433,10 @@ class _LikeDislikeButtonsState extends State<LikeDislikeButtons> {
                 },
               ),
             ),
-            Text('${widget.likes} Likes'),
+            Text(
+              '${widget.likes} Likes',
+              style: const TextStyle(fontFamily: 'Poppins'),
+            ),
             IconButton(
               icon: Icon(
                 widget.isDisliked
@@ -428,7 +463,10 @@ class _LikeDislikeButtonsState extends State<LikeDislikeButtons> {
                 });
               },
             ),
-            Text('${widget.dislikes} Dislikes'),
+            Text(
+              '${widget.dislikes} Dislikes',
+              style: const TextStyle(fontFamily: 'Poppins'),
+            ),
           ],
         ),
       ],

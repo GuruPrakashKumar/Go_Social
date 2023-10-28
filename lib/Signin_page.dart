@@ -59,13 +59,15 @@ class _SignInPageState extends State<Signin_page> {
       } else if (response.statusCode == 200) {
         await storage.write(key: "token", value: responseData["accessToken"]);
         await storage.write(key: "userEmail",value: loginEmailText.text.trim());
-        Navigator.push(
+        await storage.write(key: "loggedIn", value: "true");
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-              builder: (context) => NavigationPage(
-                    userEmailId: loginEmailText.text,
-                  )),
+            builder: (context) => NavigationPage(userEmailId: loginEmailText.text),
+          ),
+              (route) => false, // This line clears the navigation stack.
         );
+
         //   Get.to(() =>
         //       const UploadProfileImage()); //used Get.to() to navigate to next page instead of Navigator.push() for increasing performance
       }

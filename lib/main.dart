@@ -9,6 +9,8 @@ import 'package:lottie/lottie.dart';
 import 'package:user_authentication_flutter/Home_page.dart';
 import 'package:user_authentication_flutter/Signin_page.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:user_authentication_flutter/navigation_page.dart';
+import 'package:user_authentication_flutter/splash_page.dart';
 import 'config.dart';
 
 void main() {
@@ -16,8 +18,26 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final storage = const FlutterSecureStorage();
+  var isLoggedIn = '';
+  var userEmail = '';
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   void loginStatus() async {
+  //       isLoggedIn = (await storage.read(key:"loggedIn"))!;
+  //       userEmail = (await storage.read(key: "userEmail"))!;
+  //   }
+  //   loginStatus();
+  // }
 
   // This widget is the root of your application.
   @override
@@ -26,10 +46,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: const SplashPage(),
     );
   }
 }
