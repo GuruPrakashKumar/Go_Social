@@ -143,6 +143,7 @@ class _AddBlogState extends State<AddBlog> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         title: const Text("Write Blog"),
         actions: [
@@ -435,43 +436,6 @@ class _AddBlogState extends State<AddBlog> {
                         ]),
                   )
                 : const SizedBox.shrink(),
-            Positioned(
-              left: isLoading ? 90 : 138,
-              top: isLoading ? 0 : 19,
-              child: isLoading
-                  ? Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.only(right: 10, top: 4),
-                          child: Lottie.asset('assets/anims/otpVerifyAnim.json',
-                              width: 35, height: 35, fit: BoxFit.fitHeight),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(top: 15),
-                          child: const Text('Verifying..',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                                fontFamily: 'Urbanist',
-                                fontWeight: FontWeight.w600,
-                              )),
-                        )
-                      ],
-                    )
-                  : const Text(
-                      'Verify',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontFamily: 'Urbanist',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-            ),
-            //TODO: button for pasting blog
             Container(
               margin: const EdgeInsets.only(left: 10),
               child: errorTextVal != ''

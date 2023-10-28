@@ -174,204 +174,103 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
         title: const Text('Profile'),
 
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SizedBox(
-            height: 50,
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: Stack(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey, width: 1),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(100),
-                    ),
-                  ),
-                  child: ClipOval(
-                    child: pickedImage != null
-                        ? Image.file(
-                            pickedImage!,
-                            width: 170,
-                            height: 170,
-                            fit: BoxFit.cover,
-                          )
-                        : imgLoading
-                            ? Shimmer.fromColors(
-                                baseColor: Colors.grey.withOpacity(0.4),
-                                highlightColor: Colors.white,
-                                period: const Duration(seconds: 1),
-                                child: Container(
-                                  height: 170,
-                                  width: 170,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      color: Colors.grey.withOpacity(0.9)),
-                                ),
-                              )
-                            : Image.network(
-                                '$imgPath', // Use imageUrl here
-                                width: 170,
-                                height: 170,
-                                fit: BoxFit.cover,
-                              ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  right: 5,
-                  child: IconButton(
-                    //this is the icon button overlayed with profile photo
-                    onPressed: imagePickerOption,
-                    icon: const Icon(
-                      Icons.add_a_photo_outlined,
-                      color: Colors.black,
-                      size: 28,
-                    ),
-                  ),
-                )
-              ],
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(
+              height: 50,
             ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          // Padding(
-          //   padding: const EdgeInsets.all(8.0),
-          //   child: ElevatedButton.icon(
-          //       onPressed: imagePickerOption,
-          //       icon: const Icon(Icons.add_a_photo_sharp),
-          //       label: const Text('UPLOAD IMAGE')),
-          // ),
-          const SizedBox(
-            height: 20,
-          ),
-          // ElevatedButton(
-          //     onPressed: () {
-          //       Navigator.push(context,
-          //           MaterialPageRoute(builder: (context) => const BlogsPage()));
-          //     },
-          //     child: const Text("Go to Blogs")),
-          SizedBox(
-              child: Card(
-                margin: const EdgeInsets.only(top: 10, right: 15, left: 15),
-                elevation: 2,
-                surfaceTintColor: Colors.white,
-                shape:
-                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                child: Column(
-                  children: [
-                    const Padding(
-                        padding: EdgeInsets.only(top: 10,bottom: 10, right: 10, left: 10),
-                            child: ListTile(
-                               leading: Icon(Icons.settings),
-                                title: Text(
-                                  "Account Settings",
-                                style: TextStyle(
-                                  color: Color(0xFF5B5B5B),
-                                  fontSize: 20,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w500,
+            Align(
+              alignment: Alignment.center,
+              child: Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey, width: 1),
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(100),
+                      ),
+                    ),
+                    child: ClipOval(
+                      child: pickedImage != null
+                          ? Image.file(
+                              pickedImage!,
+                              width: 170,
+                              height: 170,
+                              fit: BoxFit.cover,
+                            )
+                          : imgLoading
+                              ? Shimmer.fromColors(
+                                  baseColor: Colors.grey.withOpacity(0.4),
+                                  highlightColor: Colors.white,
+                                  period: const Duration(seconds: 1),
+                                  child: Container(
+                                    height: 170,
+                                    width: 170,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+                                        color: Colors.grey.withOpacity(0.9)),
                                   ),
+                                )
+                              : Image.network(
+                                  '$imgPath', // Use imageUrl here
+                                  width: 170,
+                                  height: 170,
+                                  fit: BoxFit.cover,
                                 ),
-                                  trailing: Icon(Icons.arrow_forward_ios_rounded),
-                          ),
-                        ),
-                    const Divider(height: 2,),
-                    const Padding(
-                        padding: EdgeInsets.only(top: 10,bottom: 10, right: 10, left: 10),
-                            child: ListTile(
-                               leading: Icon(Icons.privacy_tip_outlined),
-                                title: Text(
-                                  "Privacy Settings",
-                                style: TextStyle(
-                                  color: Color(0xFF5B5B5B),
-                                  fontSize: 20,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                  trailing: Icon(Icons.arrow_forward_ios_rounded),
-                          ),
-                        ),
-                    const Divider(height: 2,),
-                    const Padding(
-                        padding: EdgeInsets.only(top: 10,bottom: 10, right: 10, left: 10),
-                            child: ListTile(
-                               leading: Icon(Icons.report_problem_outlined),
-                                title: Text(
-                                  "Report a problem",
-                                style: TextStyle(
-                                  color: Color(0xFF5B5B5B),
-                                  fontSize: 20,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                  trailing: Icon(Icons.arrow_forward_ios_rounded),
-                          ),
-                        ),
-                    const Divider(height: 2,),
-                    const Padding(
-                        padding: EdgeInsets.only(top: 10,bottom: 10, right: 10, left: 10),
-                            child: ListTile(
-                               leading: Icon(Icons.help_outline),
-                                title: Text(
-                                  "Help",
-                                style: TextStyle(
-                                  color: Color(0xFF5B5B5B),
-                                  fontSize: 20,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                  trailing: Icon(Icons.arrow_forward_ios_rounded),
-                          ),
-                        ),
-                    const Divider(height: 2,),
-                    InkWell(
-                      onTap: (){
-                        showDialog(context: context, builder: (context){
-                          return AlertDialog(
-                            title: const Text("Log Out?", style: TextStyle(
-                                fontFamily: 'Poppins'
-                            ),),
-                            content: const Text('Are you sure you want to log out?', style: TextStyle(fontFamily: 'Poppins', fontSize: 16),),
-                            actions: [
-                              TextButton(
-                                onPressed: () async {
-                                  // Allow the back button press
-                                  const storage = FlutterSecureStorage();
-                                  storage.write(key: "loggedIn", value: '');
-                                  // Navigate to HomePage and remove all previous routes
-                                  Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => const HomePage()),
-                                        (route) => false, // This predicate removes all routes
-                                  );
-                                },
-                                child: const Text('Yes',style: TextStyle(fontFamily: 'Poppins', fontSize: 16),),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  // Dismiss the alert dialog
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('No',style: TextStyle(fontFamily: 'Poppins', fontSize: 16),),
-                              ),
-                            ],
-                          );
-                        });
-                      },
-                      child: Padding(
-                          padding: const EdgeInsets.only(top: 10,bottom: 10, right: 10, left: 10),
-                              child: const ListTile(
-                                 leading: Icon(Icons.logout_rounded),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    right: 5,
+                    child: IconButton(
+                      //this is the icon button overlayed with profile photo
+                      onPressed: imagePickerOption,
+                      icon: const Icon(
+                        Icons.add_a_photo_outlined,
+                        color: Colors.black,
+                        size: 28,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            // Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: ElevatedButton.icon(
+            //       onPressed: imagePickerOption,
+            //       icon: const Icon(Icons.add_a_photo_sharp),
+            //       label: const Text('UPLOAD IMAGE')),
+            // ),
+            const SizedBox(
+              height: 20,
+            ),
+            // ElevatedButton(
+            //     onPressed: () {
+            //       Navigator.push(context,
+            //           MaterialPageRoute(builder: (context) => const BlogsPage()));
+            //     },
+            //     child: const Text("Go to Blogs")),
+            SizedBox(
+                child: Card(
+                  margin: const EdgeInsets.only(top: 10, right: 15, left: 15),
+                  elevation: 2,
+                  surfaceTintColor: Colors.white,
+                  shape:
+                      RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                  child: Column(
+                    children: [
+                      const Padding(
+                          padding: EdgeInsets.only(top: 10,bottom: 10, right: 10, left: 10),
+                              child: ListTile(
+                                 leading: Icon(Icons.settings),
                                   title: Text(
-                                    "Log Out",
+                                    "Account Settings",
                                   style: TextStyle(
                                     color: Color(0xFF5B5B5B),
                                     fontSize: 20,
@@ -382,11 +281,114 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
                                     trailing: Icon(Icons.arrow_forward_ios_rounded),
                             ),
                           ),
-                    ),
-                  ],
-                ),
-          ))
-        ],
+                      const Divider(height: 2,),
+                      const Padding(
+                          padding: EdgeInsets.only(top: 10,bottom: 10, right: 10, left: 10),
+                              child: ListTile(
+                                 leading: Icon(Icons.privacy_tip_outlined),
+                                  title: Text(
+                                    "Privacy Settings",
+                                  style: TextStyle(
+                                    color: Color(0xFF5B5B5B),
+                                    fontSize: 20,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                    trailing: Icon(Icons.arrow_forward_ios_rounded),
+                            ),
+                          ),
+                      const Divider(height: 2,),
+                      const Padding(
+                          padding: EdgeInsets.only(top: 10,bottom: 10, right: 10, left: 10),
+                              child: ListTile(
+                                 leading: Icon(Icons.report_problem_outlined),
+                                  title: Text(
+                                    "Report a problem",
+                                  style: TextStyle(
+                                    color: Color(0xFF5B5B5B),
+                                    fontSize: 20,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                    trailing: Icon(Icons.arrow_forward_ios_rounded),
+                            ),
+                          ),
+                      const Divider(height: 2,),
+                      const Padding(
+                          padding: EdgeInsets.only(top: 10,bottom: 10, right: 10, left: 10),
+                              child: ListTile(
+                                 leading: Icon(Icons.help_outline),
+                                  title: Text(
+                                    "Help",
+                                  style: TextStyle(
+                                    color: Color(0xFF5B5B5B),
+                                    fontSize: 20,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                    trailing: Icon(Icons.arrow_forward_ios_rounded),
+                            ),
+                          ),
+                      const Divider(height: 2,),
+                      InkWell(
+                        onTap: (){
+                          showDialog(context: context, builder: (context){
+                            return AlertDialog(
+                              title: const Text("Log Out?", style: TextStyle(
+                                  fontFamily: 'Poppins'
+                              ),),
+                              content: const Text('Are you sure you want to log out?', style: TextStyle(fontFamily: 'Poppins', fontSize: 16),),
+                              actions: [
+                                TextButton(
+                                  onPressed: () async {
+                                    // Allow the back button press
+                                    const storage = FlutterSecureStorage();
+                                    storage.write(key: "loggedIn", value: '');
+                                    // Navigate to HomePage and remove all previous routes
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => const HomePage()),
+                                          (route) => false, // This predicate removes all routes
+                                    );
+                                  },
+                                  child: const Text('Yes',style: TextStyle(fontFamily: 'Poppins', fontSize: 16),),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    // Dismiss the alert dialog
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('No',style: TextStyle(fontFamily: 'Poppins', fontSize: 16),),
+                                ),
+                              ],
+                            );
+                          });
+                        },
+                        child: Padding(
+                            padding: const EdgeInsets.only(top: 10,bottom: 10, right: 10, left: 10),
+                                child: const ListTile(
+                                   leading: Icon(Icons.logout_rounded),
+                                    title: Text(
+                                      "Log Out",
+                                    style: TextStyle(
+                                      color: Color(0xFF5B5B5B),
+                                      fontSize: 20,
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                      trailing: Icon(Icons.arrow_forward_ios_rounded),
+                              ),
+                            ),
+                      ),
+                    ],
+                  ),
+            ))
+          ],
+        ),
       ),
     );
   }
