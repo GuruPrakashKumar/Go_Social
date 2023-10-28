@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:user_authentication_flutter/individualChatPage.dart';
 import 'package:http/http.dart' as http;
@@ -266,7 +267,8 @@ class _AllChatsState extends State<AllChats> {
               backgroundColor: Colors.deepPurple[200],
               animSpeedFactor: 2.0,
               showChildOpacityTransition: false,
-              child: ListView.builder(
+              child: arrNames.length!=0?
+              ListView.builder(
                 itemCount: arrNames.length,
                 itemBuilder: (context, index) {
                   return Padding(
@@ -323,7 +325,45 @@ class _AllChatsState extends State<AllChats> {
                     ),
                   );
                 },
-              ),
+              )
+                  :
+              ListView(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 100),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Lottie.asset('assets/anims/sadEmojiAnim.json',
+                            width: 200,
+                            height: 200,
+                            fit: BoxFit.contain),
+                        const Text(
+                          "No Conversations Yet !",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 32,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w700,
+                            // height: 0.12,
+                          ),
+                        ),
+                        const Text(
+                          "Tap on New button to message anyone",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w700,
+                            // height: 0.12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ]
+              )
             ),
       // floatingActionButton: FloatingActionButton(
       //   onPressed: () {

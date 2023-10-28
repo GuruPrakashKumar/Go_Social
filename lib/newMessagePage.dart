@@ -175,15 +175,16 @@ class _NewMessagePageState extends State<NewMessagePage> {
                     :
                     Center(
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Lottie.asset('assets/anims/notFoundAnim.json',
                               width: 200,
                               height: 200,
                               fit: BoxFit.contain),
                           const Text(
-                            "No New People Yet !",
+                            "No New People Yet!",
                             style: TextStyle(
-                            color: Color(0xFF5B5B5B),
+                            color: Colors.black,
                             fontSize: 32,
                             fontFamily: 'Poppins',
                             fontWeight: FontWeight.w700,
