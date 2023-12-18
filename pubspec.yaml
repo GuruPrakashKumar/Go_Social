@@ -34,6 +34,7 @@ dependencies:
   http:
   get:
   image_picker: ^1.0.2
+  image_cropper: ^5.0.1
   flutter_secure_storage: ^8.0.0
   font_awesome_flutter: ^10.5.0
   toggle_switch: ^2.1.0

@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
 import 'package:image_picker/image_picker.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:user_authentication_flutter/blogs_page.dart';
-
+import 'package:image_cropper/image_cropper.dart';
+import 'package:user_authentication_flutter/view_image_page.dart';
 import 'Home_page.dart';
 import 'config.dart';
 
@@ -118,7 +118,7 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
                       // Navigator.pop(context);
                     },
                     icon: const Icon(Icons.camera),
-                    label: const Text("CAMERA"),
+                    label: const Text("Camera"),
                   ),
                   ElevatedButton.icon(
                     onPressed: () {
@@ -126,7 +126,7 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
                       // Navigator.pop(context);
                     },
                     icon: const Icon(Icons.image),
-                    label: const Text("GALLERY"),
+                    label: const Text("Gallery"),
                   ),
                   const SizedBox(
                     height: 10,
@@ -151,14 +151,37 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
     try {
       final photo = await ImagePicker().pickImage(source: imageType); //see docs
       if (photo == null) return; //if photo is null then it will return else---
-      final tempImage = File(
-          photo.path); //returns the path of the uploaded file(from the user)
+      CroppedFile? croppedFile = await ImageCropper().cropImage(
+        sourcePath: photo.path,
+        aspectRatioPresets: [
+          CropAspectRatioPreset.square,
+          // CropAspectRatioPreset.ratio3x2,
+          // CropAspectRatioPreset.original,
+          // CropAspectRatioPreset.ratio4x3,
+          // CropAspectRatioPreset.ratio16x9
+        ],
+        uiSettings: [
+          AndroidUiSettings(
+              toolbarTitle: 'Cropper',
+              toolbarColor: Colors.deepOrange,
+              toolbarWidgetColor: Colors.white,
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false),
+          IOSUiSettings(
+            title: 'Crop Your Photo',
+          ),
+          WebUiSettings(
+            context: context,
+          ),
+        ],
+      );
+      // final tempImage = File(photo.path); //returns the path of the uploaded file(from the user)
 
+      final tempImage = File(croppedFile!.path);
       setState(() {
         pickedImage = tempImage;
       });
-      uploadImage(
-          tempImage); //this uploads i have to upload this with a name so that it can be found again
+      uploadImage(tempImage);
       Navigator.pop(context);
     } catch (error) {
       debugPrint(error.toString());
@@ -172,7 +195,6 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
       appBar: AppBar(
         // centerTitle: true,
         title: const Text('Profile'),
-
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -194,11 +216,24 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
                     ),
                     child: ClipOval(
                       child: pickedImage != null
-                          ? Image.file(
-                              pickedImage!,
-                              width: 170,
-                              height: 170,
-                              fit: BoxFit.cover,
+                          ? InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ViewImagePage(
+                                              selectedImage: pickedImage,
+                                            )));
+                              },
+                              child: Hero(
+                                tag: "pickedImage",
+                                child: Image.file(
+                                  pickedImage!,
+                                  width: 170,
+                                  height: 170,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                             )
                           : imgLoading
                               ? Shimmer.fromColors(
@@ -213,11 +248,24 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
                                         color: Colors.grey.withOpacity(0.9)),
                                   ),
                                 )
-                              : Image.network(
-                                  '$imgPath', // Use imageUrl here
-                                  width: 170,
-                                  height: 170,
-                                  fit: BoxFit.cover,
+                              : InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => ViewImagePage(
+                                                  selectedImageUrl: '$imgPath',
+                                                )));
+                                  },
+                                  child: Hero(
+                                    tag: '$imgPath',
+                                    child: Image.network(
+                                      '$imgPath', // Use imageUrl here
+                                      width: 170,
+                                      height: 170,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                                 ),
                     ),
                   ),
@@ -258,89 +306,108 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
             //     child: const Text("Go to Blogs")),
             SizedBox(
                 child: Card(
-                  margin: const EdgeInsets.only(top: 10, right: 15, left: 15),
-                  elevation: 2,
-                  surfaceTintColor: Colors.white,
-                  shape:
-                      RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                  child: Column(
-                    children: [
-                      const Padding(
-                          padding: EdgeInsets.only(top: 10,bottom: 10, right: 10, left: 10),
-                              child: ListTile(
-                                 leading: Icon(Icons.settings),
-                                  title: Text(
-                                    "Account Settings",
-                                  style: TextStyle(
-                                    color: Color(0xFF5B5B5B),
-                                    fontSize: 20,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                    trailing: Icon(Icons.arrow_forward_ios_rounded),
-                            ),
-                          ),
-                      const Divider(height: 2,),
-                      const Padding(
-                          padding: EdgeInsets.only(top: 10,bottom: 10, right: 10, left: 10),
-                              child: ListTile(
-                                 leading: Icon(Icons.privacy_tip_outlined),
-                                  title: Text(
-                                    "Privacy Settings",
-                                  style: TextStyle(
-                                    color: Color(0xFF5B5B5B),
-                                    fontSize: 20,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                    trailing: Icon(Icons.arrow_forward_ios_rounded),
-                            ),
-                          ),
-                      const Divider(height: 2,),
-                      const Padding(
-                          padding: EdgeInsets.only(top: 10,bottom: 10, right: 10, left: 10),
-                              child: ListTile(
-                                 leading: Icon(Icons.report_problem_outlined),
-                                  title: Text(
-                                    "Report a problem",
-                                  style: TextStyle(
-                                    color: Color(0xFF5B5B5B),
-                                    fontSize: 20,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                    trailing: Icon(Icons.arrow_forward_ios_rounded),
-                            ),
-                          ),
-                      const Divider(height: 2,),
-                      const Padding(
-                          padding: EdgeInsets.only(top: 10,bottom: 10, right: 10, left: 10),
-                              child: ListTile(
-                                 leading: Icon(Icons.help_outline),
-                                  title: Text(
-                                    "Help",
-                                  style: TextStyle(
-                                    color: Color(0xFF5B5B5B),
-                                    fontSize: 20,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                    trailing: Icon(Icons.arrow_forward_ios_rounded),
-                            ),
-                          ),
-                      const Divider(height: 2,),
-                      InkWell(
-                        onTap: (){
-                          showDialog(context: context, builder: (context){
+              margin: const EdgeInsets.only(top: 10, right: 15, left: 15),
+              elevation: 2,
+              surfaceTintColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
+              child: Column(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(
+                        top: 10, bottom: 10, right: 10, left: 10),
+                    child: ListTile(
+                      leading: Icon(Icons.settings),
+                      title: Text(
+                        "Account Settings",
+                        style: TextStyle(
+                          color: Color(0xFF5B5B5B),
+                          fontSize: 20,
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      trailing: Icon(Icons.arrow_forward_ios_rounded),
+                    ),
+                  ),
+                  const Divider(
+                    height: 2,
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(
+                        top: 10, bottom: 10, right: 10, left: 10),
+                    child: ListTile(
+                      leading: Icon(Icons.privacy_tip_outlined),
+                      title: Text(
+                        "Privacy Settings",
+                        style: TextStyle(
+                          color: Color(0xFF5B5B5B),
+                          fontSize: 20,
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      trailing: Icon(Icons.arrow_forward_ios_rounded),
+                    ),
+                  ),
+                  const Divider(
+                    height: 2,
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(
+                        top: 10, bottom: 10, right: 10, left: 10),
+                    child: ListTile(
+                      leading: Icon(Icons.report_problem_outlined),
+                      title: Text(
+                        "Report a problem",
+                        style: TextStyle(
+                          color: Color(0xFF5B5B5B),
+                          fontSize: 20,
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      trailing: Icon(Icons.arrow_forward_ios_rounded),
+                    ),
+                  ),
+                  const Divider(
+                    height: 2,
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(
+                        top: 10, bottom: 10, right: 10, left: 10),
+                    child: ListTile(
+                      leading: Icon(Icons.help_outline),
+                      title: Text(
+                        "Help",
+                        style: TextStyle(
+                          color: Color(0xFF5B5B5B),
+                          fontSize: 20,
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      trailing: Icon(Icons.arrow_forward_ios_rounded),
+                    ),
+                  ),
+                  const Divider(
+                    height: 2,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
                             return AlertDialog(
-                              title: const Text("Log Out?", style: TextStyle(
-                                  fontFamily: 'Poppins'
-                              ),),
-                              content: const Text('Are you sure you want to log out?', style: TextStyle(fontFamily: 'Poppins', fontSize: 16),),
+                              title: const Text(
+                                "Log Out?",
+                                style: TextStyle(fontFamily: 'Poppins'),
+                              ),
+                              content: const Text(
+                                'Are you sure you want to log out?',
+                                style: TextStyle(
+                                    fontFamily: 'Poppins', fontSize: 16),
+                              ),
                               actions: [
                                 TextButton(
                                   onPressed: () async {
@@ -350,42 +417,54 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
                                     // Navigate to HomePage and remove all previous routes
                                     Navigator.pushAndRemoveUntil(
                                       context,
-                                      MaterialPageRoute(builder: (context) => const HomePage()),
-                                          (route) => false, // This predicate removes all routes
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const HomePage()),
+                                      (route) =>
+                                          false, // This predicate removes all routes
                                     );
                                   },
-                                  child: const Text('Yes',style: TextStyle(fontFamily: 'Poppins', fontSize: 16),),
+                                  child: const Text(
+                                    'Yes',
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins', fontSize: 16),
+                                  ),
                                 ),
                                 TextButton(
                                   onPressed: () {
                                     // Dismiss the alert dialog
                                     Navigator.pop(context);
                                   },
-                                  child: const Text('No',style: TextStyle(fontFamily: 'Poppins', fontSize: 16),),
+                                  child: const Text(
+                                    'No',
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins', fontSize: 16),
+                                  ),
                                 ),
                               ],
                             );
                           });
-                        },
-                        child: Padding(
-                            padding: const EdgeInsets.only(top: 10,bottom: 10, right: 10, left: 10),
-                                child: const ListTile(
-                                   leading: Icon(Icons.logout_rounded),
-                                    title: Text(
-                                      "Log Out",
-                                    style: TextStyle(
-                                      color: Color(0xFF5B5B5B),
-                                      fontSize: 20,
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                      trailing: Icon(Icons.arrow_forward_ios_rounded),
-                              ),
-                            ),
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          top: 10, bottom: 10, right: 10, left: 10),
+                      child: const ListTile(
+                        leading: Icon(Icons.logout_rounded),
+                        title: Text(
+                          "Log Out",
+                          style: TextStyle(
+                            color: Color(0xFF5B5B5B),
+                            fontSize: 20,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        trailing: Icon(Icons.arrow_forward_ios_rounded),
                       ),
-                    ],
+                    ),
                   ),
+                ],
+              ),
             ))
           ],
         ),
