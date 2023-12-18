@@ -151,7 +151,7 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
     try {
       final photo = await ImagePicker().pickImage(source: imageType); //see docs
       if (photo == null) return; //if photo is null then it will return else---
-      CroppedFile? croppedFile = await ImageCropper().cropImage(
+      CroppedFile? croppedFile = await ImageCropper().cropImage(//Image Cropper
         sourcePath: photo.path,
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
@@ -162,7 +162,7 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
         ],
         uiSettings: [
           AndroidUiSettings(
-              toolbarTitle: 'Cropper',
+              toolbarTitle: 'Crop Your Photo',
               toolbarColor: Colors.deepOrange,
               toolbarWidgetColor: Colors.white,
               initAspectRatio: CropAspectRatioPreset.original,
@@ -177,7 +177,7 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
       );
       // final tempImage = File(photo.path); //returns the path of the uploaded file(from the user)
 
-      final tempImage = File(croppedFile!.path);
+      final tempImage = File(croppedFile!.path);//returns the path of the uploaded file(from the user)
       setState(() {
         pickedImage = tempImage;
       });

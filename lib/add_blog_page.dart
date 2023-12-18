@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:lottie/lottie.dart';
 import 'package:user_authentication_flutter/blogs_page.dart';
 import 'package:user_authentication_flutter/config.dart';
@@ -34,10 +35,36 @@ class _AddBlogState extends State<AddBlog> {
   void pickImage() async {
     final pickedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
+
     if (pickedImage != null) {
+      CroppedFile? croppedFile = await ImageCropper().cropImage(//Image Cropper
+        sourcePath: pickedImage.path,
+        aspectRatioPresets: [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        uiSettings: [
+          AndroidUiSettings(
+              toolbarTitle: 'Crop Image',
+              toolbarColor: Colors.white,
+              toolbarWidgetColor: Colors.black,
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false),
+          IOSUiSettings(
+            title: 'Crop Image',
+          ),
+          WebUiSettings(
+            context: context,
+          ),
+        ],
+      );
       setState(() {
         errorTextVal = '';
-        selectedImage = File(pickedImage.path);
+        // selectedImage = File(pickedImage.path);
+        selectedImage = File(croppedFile!.path);
       });
     }
   }
