@@ -1,5 +1,8 @@
 # Go_Social
 
+You can download apk of this app and see some screenshots from below link: 
+https://drive.google.com/drive/folders/1QpL_zNSuSxdkyxbx9XqmDSaapONsg1f0
+
 A social media app project.
 ## Features: 
 - Users can sign up with their email id and can sign in securely. for sign up otp verification will be done.
