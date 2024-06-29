@@ -13,5 +13,5 @@ A social media app project.
 - Users can add their profile picture.
 
 ## Backend:
-- backend is live on render.com, used node.js, express.js and mongodb.
+- backend is live on AWS, used node.js, express.js and mongodb.
 - proper authentication is performed while signing up and signing in the user.
