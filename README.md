@@ -1,13 +1,23 @@
 # Go_Social
 ## 🚀 Demo
-![App Screenshot](assets/ss1.jpg)
-![App Screenshot](assets/ss2.jpg)
-![App Screenshot](assets/ss3.jpg)
-![App Screenshot](assets/ss4.jpg)
-![App Screenshot](assets/ss5.jpg)
-![App Screenshot](assets/ss6.jpg)
-![App Screenshot](assets/ss7.jpg)
-![App Screenshot](assets/ss8.jpg)
+
+<table>
+  <tr>
+    <td><img src="assets/ss1.jpg" width="200"></td>
+    <td><img src="assets/ss2.jpg" width="200"></td>
+    <td><img src="assets/ss3.jpg" width="200"></td>
+  </tr>
+  <tr>
+    <td><img src="assets/ss4.jpg" width="200"></td>
+    <td><img src="assets/ss5.jpg" width="200"></td>
+    <td><img src="assets/ss6.jpg" width="200"></td>
+  </tr>
+  <tr>
+    <td><img src="assets/ss7.jpg" width="200"></td>
+    <td><img src="assets/ss8.jpg" width="200"></td>
+  </tr>
+</table>
+
 
 You can download apk of this app and see some screenshots from below link: 
 https://drive.google.com/drive/folders/1QpL_zNSuSxdkyxbx9XqmDSaapONsg1f0
