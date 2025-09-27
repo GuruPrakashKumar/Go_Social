@@ -17,6 +17,10 @@
     <td><img src="assets/ss8.jpg" width="200"></td>
   </tr>
 </table>
+## 🎥 Demo Videos
+
+<video src="assets/demo1.mp4" width="250" autoplay loop muted playsinline></video>
+<video src="assets/demo2.mp4" width="250" autoplay loop muted playsinline></video>
 
 
 You can download apk of this app and see some screenshots from below link: 
