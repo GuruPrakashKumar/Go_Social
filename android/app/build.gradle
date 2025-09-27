@@ -22,6 +22,7 @@ if (flutterVersionName == null) {
 }
 
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
@@ -40,7 +41,7 @@ android {
         applicationId "com.example.user_authentication_flutter"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion 18
+        minSdkVersion 27
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -57,6 +58,9 @@ android {
 }
 dependencies {
     implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.google.firebase:firebase-core:20.1.2'
+    implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.firebase:firebase-analytics'
 }
 flutter {
     source '../..'

@@ -1,8 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:user_authentication_flutter/allChats.dart';
 import 'package:user_authentication_flutter/blogs_page.dart';
+import 'package:user_authentication_flutter/config.dart';
+import 'package:user_authentication_flutter/notifications_services.dart';
 import 'package:user_authentication_flutter/uploadProfileImage.dart';
+import 'package:http/http.dart' as http;
 
 class NavigationPage extends StatefulWidget {
   final String userEmailId;
@@ -14,11 +20,33 @@ class NavigationPage extends StatefulWidget {
 
 class _NavigationPageState extends State<NavigationPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-
+  NotificationServices notificationServices = NotificationServices();
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, initialIndex: 0, vsync: this);
+    notificationServices.requestNotificationPermission();
+    notificationServices.firebaseInit(context);
+    notificationServices.setupInteractMessage(context);
+    notificationServices.isTokenRefresh();
+    notificationServices.getDeviceToken().then((deviceToken){
+      // print("device token: ");
+      updateDeviceToken(deviceToken);
+      // print(deviceToken);
+    });
+  }
+  void updateDeviceToken(String deviceToken) async{
+    const storage = FlutterSecureStorage();
+    final token = await storage.read(key: "token");
+    var data={
+      "deviceToken":deviceToken
+    };
+    var response = await http.post(Uri.parse(updateDeviceTokenUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+        body: jsonEncode(data));
   }
 
   @override

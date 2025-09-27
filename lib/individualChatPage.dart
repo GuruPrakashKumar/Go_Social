@@ -13,6 +13,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 import 'Models/MessageModel.dart';
+import 'notifications_services.dart';
 
 class IndividualChatPage extends StatefulWidget {
   final String name;
@@ -39,6 +40,7 @@ class _IndividualChatPageState extends State<IndividualChatPage> {
   List<MessageModel> messageList = [];
   bool atLeastSentOneMsg = false;
   bool isLoading = false;
+  NotificationServices notificationServices = NotificationServices();
   // ScrollController _scrollController = ScrollController();
   FocusNode _messageFieldFocus = FocusNode();
   late KeyboardVisibilityController _keyboardVisibilityController;
@@ -55,6 +57,7 @@ class _IndividualChatPageState extends State<IndividualChatPage> {
         print("received msg" + msg.toString());
         setMessage("receivedMsg", msg["message"]);
       });
+    socket.onDisconnect((data) => {print("socket disconnected")});
     });
   }
 
@@ -105,7 +108,25 @@ class _IndividualChatPageState extends State<IndividualChatPage> {
     });
   }
 
-  void sendMessage(String message, String senderEmail, String targetEmail) {
+  ///gets target device token and the name and profile photo of sender user
+  Future<Map<String, dynamic>?> getTargetDeviceToken(String targetEmail)async {
+    const storage = FlutterSecureStorage();
+    final token = await storage.read(key: "token");
+    var response = await http.post(Uri.parse(getTargetDeviceTokenUrl),
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': 'Bearer $token'
+        },
+        body: jsonEncode({
+          "targetEmail":targetEmail,
+        }));
+    if(response.statusCode==200){
+      var responseData = jsonDecode(response.body);
+      return responseData as Map<String, dynamic>;
+    }
+    return null;
+  }
+  void sendMessage(String message, String senderEmail, String targetEmail) async {
     setMessage("sentMsg", message);
     socket.emit(
       "message",
@@ -115,6 +136,32 @@ class _IndividualChatPageState extends State<IndividualChatPage> {
         "targetEmail": targetEmail
       },
     );
+    Map<String, dynamic> responseData = await getTargetDeviceToken(targetEmail) as Map<String, dynamic>;
+    notificationServices.getDeviceToken().then((value)async{
+      var data={
+        'to':responseData['deviceToken'],
+        'priority': 'high',
+        'notification':{
+          'title': responseData['name'],
+          'body': message
+        },
+        'data':{
+          'type':'messageSentNotification',
+          'name':responseData['name'],//name of the person who sent the message
+          'icon':responseData['imgPath'],//photo of the person who sent the message
+          'targetEmailId':senderEmail,
+          'userEmailId':targetEmail,
+        }
+      };
+      await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+        body: jsonEncode(data),
+        headers: {
+          'Content-Type':'application/json',
+          'Authorization': notification_server_key
+        }
+      );
+    });
+
   }
 
   @override
@@ -447,10 +494,12 @@ class _IndividualChatPageState extends State<IndividualChatPage> {
                                 icon: const Icon(Icons.send_rounded),
                                 onPressed: () {
                                   // _scrollController.animateTo(_scrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 200),curve: Curves.easeOut);
-                                  sendMessage(
-                                      _sendMessageController.text.trim(),
-                                      widget.userEmailId,
-                                      widget.targetEmailId);
+                                  if(_sendMessageController.text.trim().isNotEmpty){
+                                    sendMessage(
+                                        _sendMessageController.text.trim(),
+                                        widget.userEmailId,
+                                        widget.targetEmailId);
+                                  }
                                   _sendMessageController.clear();
                                 },
                               ),

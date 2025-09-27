@@ -151,7 +151,7 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
     try {
       final photo = await ImagePicker().pickImage(source: imageType); //see docs
       if (photo == null) return; //if photo is null then it will return else---
-      CroppedFile? croppedFile = await ImageCropper().cropImage(//Image Cropper
+      CroppedFile? croppedFile = await ImageCropper().cropImage(//Image Cropper //if your app is crashing then check manifest file search for UCropActivity add it there
         sourcePath: photo.path,
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
@@ -163,8 +163,8 @@ class _UploadProfileImageState extends State<UploadProfileImage> {
         uiSettings: [
           AndroidUiSettings(
               toolbarTitle: 'Crop Your Photo',
-              toolbarColor: Colors.deepOrange,
-              toolbarWidgetColor: Colors.white,
+              toolbarColor: Colors.white,
+              toolbarWidgetColor: Colors.black,
               initAspectRatio: CropAspectRatioPreset.original,
               lockAspectRatio: false),
           IOSUiSettings(

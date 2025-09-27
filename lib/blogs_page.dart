@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
@@ -293,10 +294,14 @@ class BlogPageState extends State<BlogsPage> {
                                         },
                                         child: Hero(
                                           tag: blog['blogImagePath'],
-                                          child: Image.network(
-                                            blog['blogImagePath'],
-                                            width: double.infinity,
+                                          child: CachedNetworkImage(
+                                            imageUrl: blog['blogImagePath'],
+                                            width: double.infinity, // Set desired width
                                             fit: BoxFit.contain,
+                                            cacheKey: blog['blogImagePath'], // Set unique key for each image
+                                            useOldImageOnUrlChange: true,
+                                            placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                                            errorWidget: (context, url, error) => Icon(Icons.error),
                                           ),
                                         ),
                                       ),

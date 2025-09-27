@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -13,11 +15,19 @@ import 'package:user_authentication_flutter/navigation_page.dart';
 import 'package:user_authentication_flutter/splash_page.dart';
 import 'config.dart';
 
-void main() {
+
+void main() async {
   FlutterNativeSplash.remove();
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(const MyApp());
 }
-
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async{
+  Firebase.initializeApp();
+  print(message.notification!.title.toString());
+}
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -25,19 +35,11 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
+
 class _MyAppState extends State<MyApp> {
   final storage = const FlutterSecureStorage();
   var isLoggedIn = '';
   var userEmail = '';
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   void loginStatus() async {
-  //       isLoggedIn = (await storage.read(key:"loggedIn"))!;
-  //       userEmail = (await storage.read(key: "userEmail"))!;
-  //   }
-  //   loginStatus();
-  // }
 
   // This widget is the root of your application.
   @override
