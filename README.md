@@ -1,16 +1,36 @@
-# user_authentication_flutter
+# Go_Social
+## 🚀 Demo
 
-A new Flutter project.
+<table>
+  <tr>
+    <td><img src="assets/ss1.jpg" width="200"></td>
+    <td><img src="assets/ss2.jpg" width="200"></td>
+    <td><img src="assets/ss3.jpg" width="200"></td>
+  </tr>
+  <tr>
+    <td><img src="assets/ss4.jpg" width="200"></td>
+    <td><img src="assets/ss5.jpg" width="200"></td>
+    <td><img src="assets/ss6.jpg" width="200"></td>
+  </tr>
+  <tr>
+    <td><img src="assets/ss7.jpg" width="200"></td>
+    <td><img src="assets/ss8.jpg" width="200"></td>
+  </tr>
+</table>
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+You can download apk of this app and see some screenshots from below link: 
+https://drive.google.com/drive/folders/1QpL_zNSuSxdkyxbx9XqmDSaapONsg1f0
 
-A few resources to get you started if this is your first Flutter project:
+A social media app project.
+## Features: 
+- Users can sign up with their email id and can sign in securely. for sign up otp verification will be done.
+- Users can post a blog with a text and image that will be publicly visible.
+- Users can use ai to correct their written blog grammatically.
+- Users can like and dislike the blogs.
+- users can chat with others privately.
+- Users can add their profile picture.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Backend:
+- backend is live on AWS, used node.js, express.js and mongodb.
+- proper authentication is performed while signing up and signing in the user.
